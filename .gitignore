@@ -1,5 +1,4 @@
 drupal/mysql/*
 drupal/web/vendor
 drupal/web/core/yarn.lock
-drupal/devoteam_backup.sql
 .vscode
