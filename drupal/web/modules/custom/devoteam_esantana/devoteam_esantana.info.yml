@@ -1,0 +1,6 @@
+name: Devoteam Challenge Module
+description: Module for search users, display user's profile and a "happy birthdate" email alert cronjob.
+package: Custom
+type: module
+version: 1.0
+core: 8.x

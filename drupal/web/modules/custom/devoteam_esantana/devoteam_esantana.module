@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ * Contains devoteam_esantana.module.
+ */
+
+ /**
+  * Set module template
+  */
+function devoteam_esantana_theme($existing, $type, $theme, $path) {
+    return [
+        'devoteam_esantana' => [
+            'variables' => ['user' => NULL],
+        ],
+    ];
+}
+
+/**
+ * Cronjob 
+ * Send an email to users who turn birthday today.
+ */
+function devoteam_esantana_cron(){
+    \Drupal::logger('happy_birthday_cron')->notice('Cron ran');
+    // Set current month-date
+    $subdate = date('m-d');
+
+    // Get users who turn birthday today
+    $users_query = \Drupal::database()->select('users_field_data', 'ufd');
+    $users_query->fields('ufd', ['uid', 'name', 'mail']);
+    $users_query->addField('ufb', 'field_birthdate_value');
+    $users_query->join('user__field_birthdate', 'ufb', 'ufd.uid = ufb.entity_id');
+    $users_query->condition('ufb.field_birthdate_value', '%'.$subdate, 'LIKE');
+    $users = $users_query->execute()->fetchAllAssoc('uid');
+
+    foreach($users as $user){
+        // Send birthday mail
+        $params['user'] = user_load($user->id);
+        $params['username'] = $user->name;
+
+        $mail_manager = \Drupal::service('plugin.manager.mail');
+        $mail_manager->mail('devoteam', 'birthday', $user->mail, 'en', $params);
+    }
+}
+
+function devoteam_mail($key, &$message, $params) {
+    switch ($key) {
+        case 'birthday':
+            // Set subject and body for each user
+            $message['subject'] = t('Happy Birthday!!!');
+            $message['body'][] = t("Dear %username\n\nWe wish you happy birthday.\n\nCheers,", ['%username' => $params['username'],]);
+            break;
+    }
+}

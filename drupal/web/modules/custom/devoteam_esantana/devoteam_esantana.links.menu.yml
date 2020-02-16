@@ -1,0 +1,6 @@
+devoteam_esantana.search_user:
+  title: 'Search user'
+  parent: main
+  menu_name: main
+  route_name: devoteam_esantana.search_users
+  weight: 100

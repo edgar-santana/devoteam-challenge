@@ -1,0 +1,19 @@
+devoteam_esantana.search_users:
+  path: '/search-users'
+  defaults:
+    _form: '\Drupal\devoteam_esantana\Form\UserSearchForm'
+    _title: 'Devoteam Challenge'
+  requirements:
+    _permission: 'access content'
+
+devoteam_esantana.user_profile:
+  path: '/user-profile/{uid}'
+  defaults:
+    _controller: '\Drupal\devoteam_esantana\Controller\DevoteamController::userProfile'
+    _format: json
+  requirements:
+    _permission: 'access content'
+  options:
+    parameters:
+      uid:
+        type: int
